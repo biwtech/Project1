@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Menu - Kafae Oon Jai{% endblock %}
+
+{% block content %}
+
+<section class="hero-parallax" style="height: 35vh; display: flex; align-items: center; justify-content: center; text-align: center; background: #fdfaf5;">
+    <div class="hero-content fade-in">
+        <h1 style="font-size: 2.8rem; color: var(--dark);">เมนูของเรา</h1>
+        <p class="italic" style="color: #888;">"ค้นพบรสชาติที่คุณหลงรัก"</p>
+    </div>
+</section>
+
+<section style="padding: 20px 0; background: #fff; border-bottom: 1px solid #f0f0f0;">
+    <div class="container" style="max-width: 900px; margin: 0 auto; padding: 0 20px;">
+        <form method="GET" action="{% url 'menu' %}" style="display: flex; gap: 10px; justify-content: center;">
+            
+            <input type="text" name="q" value="{{ query|default:'' }}" placeholder="ค้นหาชื่อเมนู..." 
+                style="flex: 2; padding: 12px 20px; border-radius: 10px; border: 1px solid #e0e0e0; outline: none;">
+
+            <select name="category" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #e0e0e0; background: #fff; cursor: pointer;">
+                <option value="">ทุกหมวดหมู่</option>
+                {% for cat in categories %}
+                    <option value="{{ cat }}" {% if request.GET.category == cat %}selected{% endif %}>{{ cat }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" style="padding: 12px 25px; border-radius: 10px; border: none; background: var(--dark, #333); color: white; font-weight: 500; cursor: pointer; transition: 0.3s;">
+                ค้นหา
+            </button>
+        </form>
+    </div>
+</section>
+
+<section style="padding: 50px 0;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        
+        {% if query %}
+            <p style="text-align: center; margin-bottom: 30px; color: #666;">ผลการค้นหาสำหรับ: "<strong>{{ query }}</strong>"</p>
+        {% endif %}
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;">
+            
+            {% for item in menus %}
+            <div class="review-card fade-in" style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                <div style="height: 200px; background: #f9f9f9; overflow: hidden;">
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% else %}
+                        <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #ddd;">
+                            <i class="fas fa-image fa-2x"></i>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div style="padding: 20px;">
+                    <span style="font-size: 0.75rem; color: var(--accent, #d4a373); font-weight: bold; text-transform: uppercase;">{{ item.category }}</span>
+                    <h3 style="margin: 5px 0; font-size: 1.25rem; color: var(--dark);">{{ item.name }}</h3>
+                    <p style="color: #888; font-size: 0.9rem; margin-bottom: 15px; height: 40px; overflow: hidden;">{{ item.description|default:"" }}</p>
+                    <div style="border-top: 1px solid #f5f5f5; padding-top: 15px; font-weight: bold; font-size: 1.2rem; color: var(--dark);">
+                        ฿{{ item.price }}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div style="grid-column: 1 / -1; text-align: center; padding: 100px 0;">
+                <p style="font-size: 1.2rem; color: #bbb;"></p>
+                
+                <a href="{% url 'menu' %}" style="color: var(--accent); text-decoration: underline;">แสดงเมนูทั้งหมด</a>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</section>
+
+<footer style="padding: 30px; text-align: center; background: #fafafa; color: #999; font-size: 0.85rem;">
+    <p></p>
+    <p style="margin-top: 5px; opacity: 0.6;"></p>
+</footer>
+{% endblock %}

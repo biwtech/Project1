@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero-parallax">
+    <div class="hero-content fade-in">
+        <span class="sub-title">KAFAE OON JAI.</span>
+        <h1>Chasing golden hour vibes? <br> <span class="italic">Our doors are open for your warmest moments.</span></h1>
+        <p>กำลังตามหาบรรยากาศช่วงแสงสีทองอยู่ใช่ไหม? <span class="italic">ประตูของเราเปิดรอรับช่วงเวลาที่อบอุ่นที่สุดของคุณเสมอ</span></p>
+        <a href="{% url 'menu' %}" class="btn-primary">Explore Menu</a>
+    </div>
+</section>
+            <div class="review-card fade-in">
+                <p>"{{ review.content }}"</p>
+                <p> {{ review.author }}</p>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="{% url 'booking' %}" class="btn-primary">เขียนรีวิว</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

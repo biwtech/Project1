@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block title %}Reserve - Kafae Oon Jai{% endblock %}
+
+{% block content %}
+<section id="booking" class="booking-section">
+    <div class="container">
+        <h2 class="section-title fade-in">Reserve a Table</h2>
+        <p class="section-subtitle fade-in">Book your perfect moment with us</p>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 1200px; margin: 0 auto;">
+            
+            <!-- ฟอร์มจองโต๊ะ -->
+            <div class="booking-card fade-in">
+                <div class="booking-badge">RESERVATION</div>
+                <h3 style="margin-bottom: 25px; color: var(--dark);">จองโต๊ะ</h3>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label>ชื่อผู้จอง</label>
+                        <input type="text" name="name" placeholder="ระบุชื่อของคุณ" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>จำนวนท่าน</label>
+                            <input type="number" name="guests" min="1" max="20" required>
+                        </div>
+                        <div class="form-group">
+                            <label>เบอร์โทรศัพท์</label>
+                            <input type="tel" name="phone" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>อีเมล (ไม่บังคับ)</label>
+                        <input type="email" name="email" placeholder="example@email.com">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>วันที่</label>
+                            <input type="date" name="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label>เวลา</label>
+                            <input type="time" name="time" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>คำขอพิเศษ</label>
+                        <textarea name="special_request" rows="3" placeholder="เช่น แพ้อาหาร, โต๊ะวิวสวย, ฯลฯ"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-submit-premium">Confirm My Table</button>
+                </form>
+            </div>
+
+            <!-- รายการจองทั้งหมด -->
+            <div class="booking-card fade-in" style="max-height: 600px; overflow-y: auto;">
+                <h3 style="margin-bottom: 25px; color: var(--dark);">รายการจอง</h3>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ชื่อ</th>
+                                <th>วันที่</th>
+                                <th>เวลา</th>
+                                <th>จำนวน</th>
+                                <th>จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for booking in bookings %}
+                            <tr>
+                                <td>
+                                    <strong>{{ booking.customer_name }}</strong><br>
+                                    <small style="color: #666;">{{ booking.phone }}</small>
+                                </td>
+                                <td>{{ booking.date|date:"d/m/Y" }}</td>
+                                <td>{{ booking.time|time:"H:i" }}</td>
+                                <td>{{ booking.guests }} คน</td>
+                                <td>
+                                    <a href="{% url 'delete_booking' booking.id %}" class="btn-delete">ลบ</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 40px; color: #666;">
+                                    ยังไม่มีรายการจอง
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ส่วนรีวิว -->
+        <div style="max-width: 1200px; margin: 60px auto 0;">
+            <h2 class="section-title fade-in">Customer Reviews</h2>
+            <p class="section-subtitle fade-in">Share your experience with us</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 40px;">
+                
+                <!-- ฟอร์มรีวิว -->
+                <div class="postcard-form fade-in">
+                    <h3 style="margin-bottom: 20px; color: var(--dark);">เขียนรีวิว</h3>
+                    
+                    <form method="POST" id="reviewForm">
+                        {% csrf_token %}
+                        <input type="hidden" name="revName" id="revNameHidden">
+                        <input type="hidden" name="revStarHidden" id="revStarHidden" value="5">
+                        
+                        <div class="form-group">
+                            <label>ชื่อของคุณ</label>
+                            <input type="text" id="revNameInput" placeholder="ชื่อเล่นก็ได้" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>ให้คะแนน</label>
+                            <div class="star-rating-wrapper">
+                                <span class="star-item selected" data-value="5">★</span>
+                                <span class="star-item selected" data-value="4">★</span>
+                                <span class="star-item selected" data-value="3">★</span>
+                                <span class="star-item selected" data-value="2">★</span>
+                                <span class="star-item selected" data-value="1">★</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>ข้อความรีวิว</label>
+                            <textarea name="revMessage" id="revMessage" rows="4" placeholder="บอกเราถึงประสบการณ์ของคุณ..." required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn-review-premium">ส่งโปสการ์ดรีวิว</button>
+                    </form>
+                </div>
+                
+                <!-- แสดงรีวิวทั้งหมด -->
+                <div class="reviews-container fade-in" id="reviewList">
+                    {% for review in reviews %}
+                    <div class="review-card">
+                        <div class="stars">
+                            {% with ''|center:review.rating as range %}
+                            {% for _ in range %}⭐{% endfor %}
+                            {% endwith %}
+                        </div>
+                        <p>"{{ review.message }}"</p>
+                        <span class="customer">- คุณ{{ review.name }}</span>
+                        <small style="color: #999; display: block; margin-top: 5px;">{{ review.created_at|date:"d/m/Y" }}</small>
+                    </div>
+                    {% empty %}
+                    <div class="review-card">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p>"ยังไม่มีรีวิว เป็นคนแรกที่รีวิวเลย!"</p>
+                        <span class="customer">- Kafae Oon Jai Team</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}ยืนยันการยกเลิก - Kafae Oon Jai{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 100px auto; text-align: center; padding: 40px; background: #fff; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+    <h1 style="color: #e74c3c; margin-bottom: 20px;">⚠️ ยืนยันการยกเลิก</h1>
+    
+    <p style="font-size: 1.1rem; margin-bottom: 30px;">คุณต้องการยกเลิกการจองนี้ใช่หรือไม่?</p>
+    
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 30px; text-align: left;">
+        <p><strong>ชื่อ:</strong> {{ booking.customer_name }}</p>
+        <p><strong>วันที่:</strong> {{ booking.date|date:"d/m/Y" }}</p>
+        <p><strong>เวลา:</strong> {{ booking.time|time:"H:i" }}</p>
+        <p><strong>จำนวนคน:</strong> {{ booking.guests }} คน</p>
+    </div>
+    
+    <p style="color: #666; font-size: 0.9rem; margin-bottom: 20px;">การดำเนินการนี้ไม่สามารถย้อนกลับได้</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" style="background: #e74c3c; color: white; padding: 12px 30px; border: none; border-radius: 25px; cursor: pointer; font-size: 1rem; margin-right: 10px;">ใช่ ยกเลิกการจอง</button>
+        <a href="{% url 'booking' %}" style="background: #95a5a6; color: white; padding: 12px 30px; border-radius: 25px; text-decoration: none; display: inline-block;">ไม่ กลับไปหน้าจอง</a>
+    </form>
+</div>
+{% endblock %}

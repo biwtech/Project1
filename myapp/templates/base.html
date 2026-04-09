@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Kafae Oon Jai Café{% endblock %}</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="nav-container">
+            
+            <!-- Logo -->
+            <a href="{% url 'home' %}" class="logo-link">
+                <i class="fa-solid fa-mug-hot"></i>
+                <span>Kafae Oon Jai</span>
+            </a>
+            
+            <!-- Menu -->
+            <nav class="main-menu">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'menu' %}">Menu</a>
+                <a href="{% url 'about' %}">About Us</a>
+                <a href="{% url 'booking' %}">Reserve</a>
+            </nav>
+            
+            <!-- Admin -->
+            <a href="/admin/" class="btn-nav-book"></a>
+        </div>
+    </header>
+
+    <!-- Messages -->
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            {{ message }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <span class="logo">Kafae Oon Jai</span>
+                    <p>Feel like home, taste like heaven.</p>
+                </div>
+                <div>
+                    <h4></h4>
+                    <p><img src="{% static 'photo/spu.png' %}" alt="" style="width: 150px; height: auto;"></p>
+                </div>
+            </div>
+                <div class="copyright">
+                    Kafae Oon Jai - SPU Project
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
